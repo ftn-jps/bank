@@ -32,12 +32,12 @@ public class TransactionController {
 
 	@PostMapping
 	public ResponseEntity<?> startTransaction(@RequestBody @Valid Transaction transaction) {
-		transactionService.add(transaction);
+		Transaction newTransaction = transactionService.add(transaction);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location",
-				"https://localhost:" + port + "/#/transaction/" + transaction.getToken());
-		return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+				"https://localhost:" + port + "/#/transaction/" + newTransaction.getToken());
+		return new ResponseEntity<>(headers, HttpStatus.FOUND);
 	}
 
 	@PostMapping("/{token}")
