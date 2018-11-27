@@ -25,7 +25,7 @@ public class TransactionController {
 	@Autowired
 	private ProcessPayment processPayment;
 
-	@Value("${server.port}")
+	@Value("${frontend.port}")
 	private int port;
 	@Value("${bank.iin}")
 	private String bankIin;
@@ -56,7 +56,7 @@ public class TransactionController {
 				headers.add("Location",
 						transaction.getFailUrl());
 
-			return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+			return new ResponseEntity<>(headers, HttpStatus.FOUND);
 		}
 		else {
 			// TODO Forward to PCC
@@ -65,6 +65,6 @@ public class TransactionController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location",
 				transaction.getErrorUrl());
-		return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+		return new ResponseEntity<>(headers, HttpStatus.FOUND);
 	}
 }
