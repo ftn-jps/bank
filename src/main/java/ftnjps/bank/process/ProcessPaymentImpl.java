@@ -26,7 +26,7 @@ public class ProcessPaymentImpl implements ProcessPayment {
 	@Autowired
 	RestTemplate restClient;
 	@Value("${pcc.url}")
-	private int pccUrl;
+	private String pccUrl;
 
 	@Override
 	public boolean local(CardDetails cardDetails, Transaction transaction) {

@@ -26,7 +26,7 @@ public class TransactionController {
 	private ProcessPayment processPayment;
 
 	@Value("${frontend.url}")
-	private int frontendUrl;
+	private String frontendUrl;
 	@Value("${bank.iin}")
 	private String bankIin;
 
