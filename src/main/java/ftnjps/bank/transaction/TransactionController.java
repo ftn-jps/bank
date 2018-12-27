@@ -46,25 +46,19 @@ public class TransactionController {
 			@RequestBody @Valid CardDetails cardDetails) {
 		Transaction transaction = transactionService.findByToken(token);
 
+		boolean response;
 		if(cardDetails.getPan().startsWith(bankIin)) {
-			HttpHeaders headers = new HttpHeaders();
-
-			if(processPayment.local(cardDetails, transaction))
-				headers.add("Location",
-						transaction.getSuccessUrl());
-			else
-				headers.add("Location",
-						transaction.getFailUrl());
-
-			return new ResponseEntity<>(headers, HttpStatus.FOUND);
+			response = processPayment.local(cardDetails, transaction);
 		}
 		else {
-			// TODO Forward to PCC
+			response = processPayment.remoteRequest(cardDetails, transaction);
 		}
 
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Location",
-				transaction.getErrorUrl());
+		if (response)
+			headers.add("Location", transaction.getSuccessUrl());
+		else
+			headers.add("Location", transaction.getFailUrl());
 		return new ResponseEntity<>(headers, HttpStatus.FOUND);
 	}
 }
