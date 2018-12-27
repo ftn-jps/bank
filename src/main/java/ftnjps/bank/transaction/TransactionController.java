@@ -61,4 +61,14 @@ public class TransactionController {
 			headers.add("Location", transaction.getFailUrl());
 		return new ResponseEntity<>(headers, HttpStatus.FOUND);
 	}
+
+	@PostMapping("/amount/{amount}")
+	public ResponseEntity<Boolean> processPccTransaction(
+			@PathVariable double amount,
+			@RequestBody @Valid CardDetails cardDetails) {
+		boolean response;
+		response = processPayment.remotePay(cardDetails, amount);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 }

@@ -59,7 +59,7 @@ public class ProcessPaymentImpl implements ProcessPayment {
 
 		ResponseEntity<Boolean> response =
 				restClient.postForEntity(
-						pccUrl + "/amount/" + transaction.getAmount(),
+						pccUrl + "/api/proxy/amount/" + transaction.getAmount(),
 						cardDetails,
 						Boolean.class);
 		if(response.getBody())
