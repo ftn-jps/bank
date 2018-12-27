@@ -25,8 +25,8 @@ public class TransactionController {
 	@Autowired
 	private ProcessPayment processPayment;
 
-	@Value("${frontend.port}")
-	private int port;
+	@Value("${frontend.url}")
+	private int frontendUrl;
 	@Value("${bank.iin}")
 	private String bankIin;
 
@@ -36,7 +36,7 @@ public class TransactionController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location",
-				"https://localhost:" + port + "/#/transaction/" + newTransaction.getToken());
+				frontendUrl + "/#/transaction/" + newTransaction.getToken());
 		return new ResponseEntity<>(headers, HttpStatus.FOUND);
 	}
 
