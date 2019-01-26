@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -31,10 +32,14 @@ public class CardDetails {
 	private long validUntilTimestamp;
 
 	public CardDetails() {}
-	public CardDetails(String pan,
-			String name,
-			String cvc,
-			long validUntilTimestamp) {
+
+	@JsonCreator
+	public CardDetails(
+		@JsonProperty("PAN") String pan,
+		@JsonProperty("cardHolderName")String name,
+		@JsonProperty("securityCode") String cvc,
+		@JsonProperty("validityDate") long validUntilTimestamp
+	) {
 		this.pan = pan;
 		this.name = name;
 		this.cvc = cvc;
