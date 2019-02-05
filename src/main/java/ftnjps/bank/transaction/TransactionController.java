@@ -7,7 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import ftnjps.bank.carddetails.CardDetails;
 import ftnjps.bank.process.ProcessPayment;
@@ -46,19 +51,16 @@ public class TransactionController {
 
 		boolean response;
 		if(cardDetails.getPan().startsWith(bankIin)) {
-		response = processPayment.local(cardDetails, transaction);
+			response = processPayment.local(cardDetails, transaction);
 		}
 		else {
 			response = processPayment.remoteRequest(cardDetails, transaction);
 		}
 
-		HttpHeaders headers = new HttpHeaders();
 		if (response)
-			headers.add("Location", transaction.getSuccessUrl());
+			return new ResponseEntity<>(transaction.getSuccessUrl(), HttpStatus.OK);
 		else
-			headers.add("Location", transaction.getFailUrl());
-//		return new ResponseEntity<>(headers, HttpStatus.FOUND);
-		return new ResponseEntity<>(transaction.getSuccessUrl(), HttpStatus.OK);
+			return new ResponseEntity<>(transaction.getErrorUrl(), HttpStatus.OK);
 	}
 
 	@PostMapping("/amount/{amount}")
