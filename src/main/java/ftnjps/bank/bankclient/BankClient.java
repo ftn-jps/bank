@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,7 +28,6 @@ public class BankClient {
 	 *
 	 * If client is not a merchant, this should be set to null
 	 */
-	@Pattern(regexp = "\\w{1,30}")
 	private String merchantId;
 	/*
 	 *  Password that the bank gives to the merchant when registering for online payment
