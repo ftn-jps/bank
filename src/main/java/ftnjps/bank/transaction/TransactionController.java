@@ -57,10 +57,12 @@ public class TransactionController {
 			response = processPayment.remoteRequest(cardDetails, transaction);
 		}
 
+		final String successUrl = new String("{ \"url\" : \""+ transaction.getSuccessUrl() +"\" }");
+		final String errorUrl = new String("{ \"url\" : \""+ transaction.getErrorUrl() +"\" }");
 		if (response)
-			return new ResponseEntity<>(transaction.getSuccessUrl(), HttpStatus.OK);
+			return new ResponseEntity<>(successUrl, HttpStatus.OK);
 		else
-			return new ResponseEntity<>(transaction.getErrorUrl(), HttpStatus.OK);
+			return new ResponseEntity<>(errorUrl, HttpStatus.OK);
 	}
 
 	@PostMapping("/amount/{amount}")
