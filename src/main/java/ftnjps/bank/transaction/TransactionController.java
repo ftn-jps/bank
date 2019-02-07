@@ -34,9 +34,12 @@ public class TransactionController {
 
 	@PostMapping
 	public ResponseEntity<?> startTransaction(@RequestBody @Valid Transaction transaction) {
-		Transaction newTransaction = transactionService.add(transaction);
+		System.out.println("Creating transaction with token: " + transaction.getToken());
 
+		Transaction newTransaction = transactionService.add(transaction);
+		System.out.println("Transaction with token: " + transaction.getToken() + " successfully created");
 		HttpHeaders headers = new HttpHeaders();
+		System.out.println("Redirecting user to fill in credit card details");
 		headers.add("Location",
 				frontendUrl + "/#/transaction/" + newTransaction.getToken());
 		return new ResponseEntity<>(headers, HttpStatus.FOUND);
@@ -47,18 +50,24 @@ public class TransactionController {
 			@PathVariable String token,
 			@RequestBody @Valid CardDetails cardDetails
 	) {
+		System.out.println("Getting transaction with token: " + token);
 		Transaction transaction = transactionService.findByToken(token);
-
+		System.out.println("Transaction with token: " + transaction.getToken() + " successfully obtained");
 		boolean response;
+
+		System.out.println("Determing weather merchant's bank is local or remote bank");
 		if(cardDetails.getPan().startsWith(bankIin)) {
+			System.out.println("Merchant's bank is local");
 			response = processPayment.local(cardDetails, transaction);
 		}
 		else {
+			System.out.println("Merchant's bank is remote");
 			response = processPayment.remoteRequest(cardDetails, transaction);
 		}
 
 		final String successUrl = new String("{ \"url\" : \""+ transaction.getSuccessUrl() +"\" }");
 		final String errorUrl = new String("{ \"url\" : \""+ transaction.getErrorUrl() +"\" }");
+		System.out.println("Redirecting...");
 		if (response)
 			return new ResponseEntity<>(successUrl, HttpStatus.OK);
 		else
@@ -70,7 +79,14 @@ public class TransactionController {
 			@PathVariable double amount,
 			@RequestBody @Valid CardDetails cardDetails) {
 		boolean response;
+		System.out.println("Remote bank payment...");
 		response = processPayment.remotePay(cardDetails, amount);
+
+		if(!response){
+			System.out.println("Remote bank payment failed!");
+		} else {
+			System.out.println("Remote bank payment success!");
+		}
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
